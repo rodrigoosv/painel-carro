@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Painel do carro</title>
 <meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#000000">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
 <style>
 :root{--wall:linear-gradient(115deg,#7d1230 0%,#4d1448 38%,#1f2d78 70%,#0f6a92 100%);--card:rgba(120,120,135,.38);--sb:rgba(0,0,0,.28);--text:#fff;--muted:rgba(255,255,255,.72);--mapbg:#2c2c30;--road:#56565c;--park:#3c5c42;--route:#2bb7ea;--green:#30d158;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -152,6 +155,7 @@ function clock(){$("clk").textContent=new Date().toLocaleTimeString("pt-PT",{hou
 function wake(){try{navigator.wakeLock.request("screen").catch(function(){})}catch(e){}}
 document.addEventListener("visibilitychange",function(){if(!document.hidden){wake();poll()}});
 setInterval(clock,1000);clock();wake();ic();
+if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(function(){});
 var q=new URLSearchParams(location.search),code=q.get("code");
 if(code||q.get("error"))history.replaceState(null,"",RU);
 if(code){tok({grant_type:"authorization_code",code:code,redirect_uri:RU,client_id:CID,code_verifier:ls("v")||""}).then(start,function(){state("auth")})}
