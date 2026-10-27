@@ -1,1 +1,161 @@
-<p>Painel do carro</p>
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Painel do carro</title>
+<meta name="mobile-web-app-capable" content="yes">
+<style>
+:root{--wall:linear-gradient(115deg,#7d1230 0%,#4d1448 38%,#1f2d78 70%,#0f6a92 100%);--card:rgba(120,120,135,.38);--sb:rgba(0,0,0,.28);--text:#fff;--muted:rgba(255,255,255,.72);--mapbg:#2c2c30;--road:#56565c;--park:#3c5c42;--route:#2bb7ea;--green:#30d158;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--wall:linear-gradient(115deg,#f4a3b4 0%,#d9a4d6 40%,#9fb1ee 72%,#8fd3ea 100%);--card:rgba(255,255,255,.62);--sb:rgba(255,255,255,.35);--text:#101012;--muted:rgba(16,16,18,.65);--mapbg:#e6e4df;--road:#fff;--park:#c6e3c4}}
+:root[data-theme="light"]{--wall:linear-gradient(115deg,#f4a3b4 0%,#d9a4d6 40%,#9fb1ee 72%,#8fd3ea 100%);--card:rgba(255,255,255,.62);--sb:rgba(255,255,255,.35);--text:#101012;--muted:rgba(16,16,18,.65);--mapbg:#e6e4df;--road:#fff;--park:#c6e3c4}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;height:100%;background:var(--wall) fixed;color:var(--text);font-family:-apple-system,"SF Pro Display","Segoe UI",Roboto,system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+button{font:inherit;color:inherit;border:0;cursor:pointer;background:none;padding:0}
+svg{display:block}
+.app{height:100%;box-sizing:border-box;display:flex;gap:12px;padding:12px}
+.sb{width:88px;flex-shrink:0;background:var(--sb);border-radius:22px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:14px 0;-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
+.clk{text-align:center;cursor:pointer}
+.clk b{display:block;font-size:24px;font-weight:600}
+.clk span{display:block;font-size:12px;color:var(--muted);margin-top:4px}
+.clk i{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);margin-right:4px}
+.apps{display:flex;flex-direction:column;gap:16px}
+.ic{width:60px;height:60px;border-radius:14px;overflow:hidden;display:block}
+.ic svg{width:100%;height:100%}
+.grid{width:44px;display:grid;grid-template-columns:repeat(4,1fr);gap:3px;color:var(--text)}
+.grid i{display:block;aspect-ratio:1;background:currentColor;border-radius:2px}
+main{flex:1;min-width:0;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr);gap:12px}
+.map{position:relative;overflow:hidden;border-radius:22px;background:var(--mapbg);min-height:180px}
+.map svg{position:absolute;inset:0;width:100%;height:100%}
+.map .lb{position:absolute;left:18px;bottom:16px;text-align:left}
+.map .lb strong{display:block;font-size:clamp(26px,4vw,40px);font-weight:700;color:#fff;background:rgba(0,0,0,.45);padding:2px 12px;border-radius:12px}
+.card{background:var(--card);border-radius:22px;padding:20px;display:flex;flex-direction:column;justify-content:space-between;gap:14px;min-width:0;-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
+.who{display:flex;flex-direction:column;gap:14px;align-items:center;min-width:0;flex:1;justify-content:center}
+.cover{overflow:hidden;background:rgba(128,128,128,.35);width:clamp(96px,15vw,170px);aspect-ratio:1;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff}
+.cover svg{width:48%;height:48%}
+.who div{min-width:0;max-width:100%;text-align:center}
+.tt{font-size:clamp(20px,2.6vw,28px);font-weight:600;margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ar{font-size:clamp(15px,1.9vw,19px);color:var(--muted);margin:2px 0 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ctl{display:flex;align-items:center;justify-content:space-around}
+.ctl button{width:80px;height:64px;display:flex;align-items:center;justify-content:center}
+.ctl svg{width:42px;height:42px}
+.ctl .pp svg{width:50px;height:50px}
+.cover img{width:100%;height:100%;object-fit:cover}
+.lg{text-align:center}.lg button{background:#1ed760;color:#000;font-size:22px;font-weight:600;padding:16px 26px;border-radius:16px}
+.sh{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;z-index:5}.sh.on{display:flex}
+.sh div{background:#2c2c30;color:#fff;border-radius:22px;padding:18px;display:flex;flex-direction:column;gap:10px;min-width:min(320px,86vw)}
+.sh button{font-size:20px;padding:16px;border-radius:14px;background:rgba(255,255,255,.12);color:#fff}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--text);color:#000;padding:12px 20px;border-radius:14px;font-size:18px;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90%;text-align:center}
+:root[data-theme="light"] .toast{color:#fff}
+.toast.on{opacity:1}
+button:focus-visible{outline:3px solid #fff;outline-offset:3px}
+@media (max-aspect-ratio:1/1){.app{flex-direction:column;height:auto;min-height:100%}.sb{width:auto;flex-direction:row;padding:10px 16px}.apps{flex-direction:row}main{grid-template-columns:1fr}body{overflow:auto}}
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+</style>
+</head>
+<body>
+<div class="app">
+  <nav class="sb" aria-label="Aplicações">
+    <div class="clk" id="clkw" title="Mudar entre claro e escuro"><b id="clk">18:42</b><span><i></i>iPhone</span></div>
+    <div class="apps">
+      <button class="ic" id="mp" aria-label="Maps"><svg viewBox="0 0 60 60" aria-hidden="true"><rect width="60" height="60" fill="#f1eee4"/><path d="M0 38 28 60H0z" fill="#9fd08e"/><path d="M34 0h26v22z" fill="#9fd08e"/><path d="M-4 44 64 8" stroke="#fff" stroke-width="7"/><path d="M22-2 40 62" stroke="#f6c744" stroke-width="5"/><circle cx="30" cy="30" r="12" fill="#1b7cf2"/><path d="M30 21l7 14-7-4-7 4z" fill="#fff"/><rect x="40" y="40" width="16" height="12" rx="4" fill="#1b6fd6"/></svg></button>
+      <button class="ic" id="sp" aria-label="Música"><svg viewBox="0 0 60 60" aria-hidden="true"><rect width="60" height="60" fill="#fa3a55"/><path d="M26 14v24a7 7 0 1 0 4 6.3V22h12v-8z" fill="#fff"/></svg></button>
+      <button class="ic" id="cf" aria-label="Definições"><svg viewBox="0 0 60 60" aria-hidden="true"><rect width="60" height="60" fill="#76767c"/><circle cx="30" cy="30" r="17" fill="#c7c7cc"/><circle cx="30" cy="30" r="12" fill="#5c5c61"/><path d="M30 20v20M20 30h20M23 23l14 14M37 23 23 37" stroke="#c7c7cc" stroke-width="3"/><circle cx="30" cy="30" r="3.5" fill="#c7c7cc"/></svg></button>
+    </div>
+    <button class="grid" id="gd" aria-label="Todas as aplicações"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></button>
+  </nav>
+  <main>
+    <section class="card" aria-label="A tocar">
+        <div class="who"><div class="cover" id="cv"><img id="im" alt="" hidden><svg id="nt" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9 3v11.3A3.5 3.5 0 1 0 11 17.5V8h6V3z"/></svg></div><div><p class="tt" id="tt"></p><p class="ar" id="ar"></p></div></div>
+        <div class="lg" id="lg" hidden><button id="lgb">Ligar ao Spotify</button></div>
+        <div class="ctl" id="ct">
+          <button id="pv" aria-label="Anterior"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 6v12L2 12zM22 6v12l-9-6z"/></svg></button>
+          <button class="pp" id="pp" aria-label="Pausa"></button>
+          <button id="nx" aria-label="Seguinte"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 6v12l9-6zM2 6v12l9-6z"/></svg></button>
+        </div>
+      </section>
+    <button class="map" id="map" aria-label="Abrir o Maps">
+      <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <rect x="20" y="150" width="150" height="80" rx="8" fill="var(--park)"/>
+        <g stroke="var(--road)" stroke-width="12" fill="none" stroke-linecap="round"><path d="M-10 70H410"/><path d="M-10 230H410"/><path d="M120 -10V310"/><path d="M300 -10V310"/><path d="M-10 10 410 140"/></g>
+        <path d="M120 310V230H300V70H410" stroke="var(--route)" stroke-width="10" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M200 205l22 42-22-11-22 11z" fill="var(--route)" stroke="#fff" stroke-width="3" stroke-linejoin="round"/>
+        <rect x="236" y="48" width="104" height="26" rx="8" fill="#0f7f9a"/><rect x="40" y="215" width="96" height="26" rx="8" fill="#0f7f9a"/>
+      </svg>
+      <div class="lb"><strong>Maps</strong></div>
+    </button>
+  </main>
+</div>
+<div class="sh" id="sh"><div><button id="th">Claro / escuro</button><button id="lo">Terminar sessão do Spotify</button><button id="cl">Fechar</button></div></div>
+<div class="toast" id="ts" role="status"></div>
+<script>
+var CID="e71cb5e1c1dc460aae8dbc3896dc1d1a";
+var RU=location.origin+location.pathname.replace(/index\.html$/,"");
+var SC="user-read-playback-state user-modify-playback-state user-read-currently-playing";
+var PA='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>';
+var PL='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"/></svg>';
+var play=false,tm,started=false;
+function $(i){return document.getElementById(i)}
+function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,v)}catch(e){return null}}
+function say(m){var e=$("ts");e.textContent=m;e.classList.add("on");clearTimeout(tm);tm=setTimeout(function(){e.classList.remove("on")},2600)}
+function b64(buf){return btoa(String.fromCharCode.apply(null,new Uint8Array(buf))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"")}
+function rnd(){var a=new Uint8Array(64);crypto.getRandomValues(a);return b64(a).slice(0,64)}
+function login(){var v=rnd();ls("v",v);
+crypto.subtle.digest("SHA-256",new TextEncoder().encode(v)).then(function(h){
+location.href="https://accounts.spotify.com/authorize?response_type=code&client_id="+CID+"&scope="+encodeURIComponent(SC)+"&redirect_uri="+encodeURIComponent(RU)+"&code_challenge_method=S256&code_challenge="+b64(h)})}
+function tok(body){return fetch("https://accounts.spotify.com/api/token",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:new URLSearchParams(body)}).then(function(r){return r.json()}).then(function(d){
+if(!d.access_token)throw new Error("auth");
+ls("at",d.access_token);ls("ex",String(Date.now()+d.expires_in*1000-60000));if(d.refresh_token)ls("rt",d.refresh_token);return d.access_token})}
+function token(){var at=ls("at");if(at&&Date.now()<Number(ls("ex")))return Promise.resolve(at);
+var rt=ls("rt");if(!rt)return Promise.reject(new Error("auth"));
+return tok({grant_type:"refresh_token",refresh_token:rt,client_id:CID})}
+function api(m,p){return token().then(function(t){return fetch("https://api.spotify.com/v1/me/player"+p,{method:m,headers:{Authorization:"Bearer "+t}})})}
+function ic(){$("pp").innerHTML=play?PA:PL;$("pp").setAttribute("aria-label",play?"Pausa":"Tocar")}
+function state(s){var ok=s==="ok",au=s==="auth";$("lg").hidden=!au;$("ct").style.display=au?"none":"";
+if(!ok){play=false;$("im").hidden=true;$("nt").style.display="";
+$("tt").textContent=au?"Spotify não ligado":"Nada a tocar";
+$("ar").textContent=au?"Liga a tua conta para controlar a música":"Abre o Spotify no iPhone"}
+ic()}
+function show(it){$("tt").textContent=it.name;
+$("ar").textContent=it.artists.map(function(a){return a.name}).join(", ");
+var im=$("im"),u=it.album&&it.album.images&&it.album.images[0]?it.album.images[0].url:"";
+if(u){if(im.getAttribute("src")!==u)im.src=u;im.hidden=false;$("nt").style.display="none"}else{im.hidden=true;$("nt").style.display=""}}
+function poll(){if(document.hidden)return;api("GET","").then(function(r){
+if(r.status===204){state("idle");return}
+if(r.status===401){ls("ex","0");return}
+if(!r.ok)return;
+return r.json().then(function(d){if(!d||!d.item){state("idle");return}
+play=!!d.is_playing;show(d.item);state("ok");play=!!d.is_playing;ic()})
+}).catch(function(e){if(e&&e.message==="auth")state("auth")})}
+function later(){setTimeout(poll,500)}
+function cmd(m,p){api(m,p).then(function(r){
+if(r.status===404)say("Abre o Spotify no iPhone e começa uma música");
+else if(r.status===403)say("O Spotify recusou o comando");
+later()},function(){state("auth")})}
+function start(){if(started)return;started=true;$("lg").hidden=true;poll();setInterval(poll,3000)}
+$("lgb").onclick=login;
+$("pp").onclick=function(){play=!play;ic();cmd("PUT",play?"/play":"/pause")};
+$("nx").onclick=function(){cmd("POST","/next")};
+$("pv").onclick=function(){cmd("POST","/previous")};
+function maps(){if(/Android/i.test(navigator.userAgent))location.href="intent://maps.google.com/#Intent;scheme=https;package=com.google.android.apps.maps;end";else window.open("https://maps.google.com","_blank")}
+$("map").onclick=$("mp").onclick=maps;
+$("sp").onclick=function(){if(!ls("rt"))login();else{poll();say("A atualizar…")}};
+$("cf").onclick=function(){$("sh").classList.add("on")};
+$("cl").onclick=function(){$("sh").classList.remove("on")};
+function theme(){var r=document.documentElement,d=r.getAttribute("data-theme");
+if(!d)d=matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";r.setAttribute("data-theme",d==="dark"?"light":"dark")}
+$("th").onclick=theme;$("clkw").onclick=theme;
+$("lo").onclick=function(){["at","ex","rt","v"].forEach(function(k){ls(k,null)});$("sh").classList.remove("on");state("auth");say("Sessão terminada")};
+$("gd").onclick=function(){if(document.fullscreenElement)document.exitFullscreen();else if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen().catch(function(){})};
+function clock(){$("clk").textContent=new Date().toLocaleTimeString("pt-PT",{hour:"2-digit",minute:"2-digit"})}
+function wake(){try{navigator.wakeLock.request("screen").catch(function(){})}catch(e){}}
+document.addEventListener("visibilitychange",function(){if(!document.hidden){wake();poll()}});
+setInterval(clock,1000);clock();wake();ic();
+var q=new URLSearchParams(location.search),code=q.get("code");
+if(code||q.get("error"))history.replaceState(null,"",RU);
+if(code){tok({grant_type:"authorization_code",code:code,redirect_uri:RU,client_id:CID,code_verifier:ls("v")||""}).then(start,function(){state("auth")})}
+else if(ls("rt")){start()}else{state("auth")}
+</script>
+</body>
+</html>
